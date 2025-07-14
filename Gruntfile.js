@@ -22,6 +22,10 @@ module.exports = function(grunt) {
                 cwd: 'libs/',
                 src: ['**/*'],
                 dest: 'dist/'
+              },
+              {
+                src: 'node_modules/handlebars/dist/handlebars.runtime.min.js',
+                dest: 'dist/handlebars.runtime.min.js'
               }
           ]
       },

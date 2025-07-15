@@ -364,7 +364,9 @@ export class Room extends Box {
    */ 
   get connections(): Array<{ startDir: Direction, startType: ConnectorType, endDir: Direction, endType: ConnectorType, room: Room }> {
     let connectors = this.connectors;
-    return connectors.map((conn) => { 
+    return connectors
+        .filter((conn) => conn.dockStart == this || !conn.oneWay)
+        .map((conn) => {
       if(conn.dockStart == this) {
         return {startDir: conn.startDir, startType: conn.startType, endDir: conn.endDir, endType: conn.endType, room: conn.dockEnd};
       } else { 

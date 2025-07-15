@@ -9,5 +9,7 @@ export enum ObjectKind {
   Supporter,
   Container,
   SingularNamed,
-  PluralNamed
+  PluralNamed,
+  Note,
+  Key
 }

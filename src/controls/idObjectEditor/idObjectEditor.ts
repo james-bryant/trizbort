@@ -5,8 +5,10 @@ import { Obj } from "../../models";
 export class IdObjectEditor extends Control {
   private ctrlName: IdInput;
   private ctrlDescription: IdInput;
+  private ctrlSymbol: IdInput;
   private obj: Obj;
   private btnDelete: HTMLElement;
+  private btnNote: IdPopup;
   private btnActor: IdPopup;
   private btnItem: IdPopup;
   private btnScenery: IdPopup;
@@ -15,7 +17,7 @@ export class IdObjectEditor extends Control {
   private dropDiv: HTMLElement;
   private dropAsChildDiv: HTMLElement;
 
-  // 
+  //
   // Create a new instance of IdObjectEditor by providing a query selector that
   // yields an id-object-editor element.
   //
@@ -69,12 +71,14 @@ export class IdObjectEditor extends Control {
     // Text inputs:
     this.ctrlName = new IdInput('.js-name', this.elem).addEventListener('input', () => { this.obj.name = this.ctrlName.value; });
     this.ctrlDescription = new IdInput('.js-description', this.elem).addEventListener('input', () => { this.obj.description = this.ctrlDescription.value; });
+    this.ctrlSymbol = new IdInput('.js-symbol', this.elem).addEventListener('input', () => { this.obj.symbol = this.ctrlSymbol.value; });
 
     // Delete button:
     this.btnDelete = this.elem.querySelector('a');
     this.btnDelete.addEventListener('click', () => { this.delete(); });
 
     // Object type buttons:
+    this.btnNote = new IdPopup('.js-note', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Note); }) as IdPopup;
     this.btnItem = new IdPopup('.js-item', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Item); }) as IdPopup;
     this.btnScenery = new IdPopup('.js-scenery', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Scenery); }) as IdPopup;
     this.btnActor = new IdPopup('.js-actor', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Actor); }) as IdPopup;
@@ -111,6 +115,7 @@ export class IdObjectEditor extends Control {
   }  
 
   private setKind(kind: ObjectKind) {
+    this.btnNote.selected = kind == ObjectKind.Note;
     this.btnActor.selected = kind == ObjectKind.Actor;
     this.btnItem.selected = kind == ObjectKind.Item;
     this.btnScenery.selected = kind == ObjectKind.Scenery;
@@ -121,6 +126,7 @@ export class IdObjectEditor extends Control {
     this.obj = obj;
     this.ctrlName.value = obj.name;
     this.ctrlDescription.value = obj.description;
+    this.ctrlSymbol.value = obj.symbol;
     this.setKind(obj.kind);
   }    
 

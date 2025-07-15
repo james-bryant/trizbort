@@ -6,13 +6,15 @@ export class Obj extends Model {
   protected _description: string;  // Object description, e.g. "This bottle gleams in the light..."
   protected _content: Obj[];       // Objects contained within this object
   protected _kind: ObjectKind;     // Kind of object
+  protected _symbol: string;       // Symbol to use on the map
 
   constructor() {
     super();
     this._name = "Object";         // Default Obj name
     this._type = "Object";
     this._description = "";
-    this._kind = ObjectKind.Item;  // Default Obj type
+    this._symbol = "♪"
+    this._kind = ObjectKind.Note;  // Default Obj type
     this._content = [];            // No subobjects
   }
 
@@ -51,7 +53,7 @@ export class Obj extends Model {
     this._name = value;
     this.setDirty();
   }
-  
+
   /**
    * Return the object's description
    */
@@ -66,8 +68,23 @@ export class Obj extends Model {
     this._description = value;
     this.setDirty();
   }
-  
-  /** 
+
+  /**
+   * Return the object's description
+   */
+  public get symbol(): string {
+    return this._symbol;
+  }
+
+  /**
+   * Set the object's description
+   */
+  public set symbol(value: string) {
+    this._symbol = value;
+    this.setDirty();
+  }
+
+  /**
    * Returns a list of objects contained in this object.
    */
   public get content(): Obj[] {

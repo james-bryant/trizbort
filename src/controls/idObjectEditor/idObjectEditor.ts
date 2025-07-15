@@ -1,4 +1,4 @@
-import { Control, IdPopup, IdInput } from "../";
+import {Control, IdPopup, IdInput, IdTextarea, IdQuickColor} from "../";
 import { ObjectKind } from "../../enums";
 import { Obj } from "../../models";
 
@@ -6,9 +6,12 @@ export class IdObjectEditor extends Control {
   private ctrlName: IdInput;
   private ctrlDescription: IdInput;
   private ctrlSymbol: IdInput;
+  private ctrlColor: IdQuickColor;
+  private ctrlData: IdTextarea;
   private obj: Obj;
   private btnDelete: HTMLElement;
   private btnNote: IdPopup;
+  private btnKey: IdPopup;
   private btnActor: IdPopup;
   private btnItem: IdPopup;
   private btnScenery: IdPopup;
@@ -72,6 +75,10 @@ export class IdObjectEditor extends Control {
     this.ctrlName = new IdInput('.js-name', this.elem).addEventListener('input', () => { this.obj.name = this.ctrlName.value; });
     this.ctrlDescription = new IdInput('.js-description', this.elem).addEventListener('input', () => { this.obj.description = this.ctrlDescription.value; });
     this.ctrlSymbol = new IdInput('.js-symbol', this.elem).addEventListener('input', () => { this.obj.symbol = this.ctrlSymbol.value; });
+    this.ctrlData = new IdTextarea('.js-data', this.elem).addEventListener('input', () => { this.obj.data = this.ctrlData.value; });
+
+    // Color input:
+    this.ctrlColor = new IdQuickColor('.js-color', this.elem).addEventListener('change', () => { this.obj.color = this.ctrlColor.value; }) as IdQuickColor;
 
     // Delete button:
     this.btnDelete = this.elem.querySelector('a');
@@ -79,6 +86,7 @@ export class IdObjectEditor extends Control {
 
     // Object type buttons:
     this.btnNote = new IdPopup('.js-note', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Note); }) as IdPopup;
+    this.btnKey = new IdPopup('.js-key', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Key); }) as IdPopup;
     this.btnItem = new IdPopup('.js-item', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Item); }) as IdPopup;
     this.btnScenery = new IdPopup('.js-scenery', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Scenery); }) as IdPopup;
     this.btnActor = new IdPopup('.js-actor', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Actor); }) as IdPopup;
@@ -116,6 +124,7 @@ export class IdObjectEditor extends Control {
 
   private setKind(kind: ObjectKind) {
     this.btnNote.selected = kind == ObjectKind.Note;
+    this.btnKey.selected = kind == ObjectKind.Key;
     this.btnActor.selected = kind == ObjectKind.Actor;
     this.btnItem.selected = kind == ObjectKind.Item;
     this.btnScenery.selected = kind == ObjectKind.Scenery;
@@ -126,7 +135,9 @@ export class IdObjectEditor extends Control {
     this.obj = obj;
     this.ctrlName.value = obj.name;
     this.ctrlDescription.value = obj.description;
+    this.ctrlData.value = obj.data;
     this.ctrlSymbol.value = obj.symbol;
+    this.ctrlColor.value = obj.color;
     this.setKind(obj.kind);
   }    
 

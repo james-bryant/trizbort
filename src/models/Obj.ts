@@ -4,15 +4,18 @@ import { Model } from "./Model";
 export class Obj extends Model {
   protected _name: string;         // Object name, e.g. "bottle of water"
   protected _description: string;  // Object description, e.g. "This bottle gleams in the light..."
+  protected _data: string;         // Data about this object
   protected _content: Obj[];       // Objects contained within this object
   protected _kind: ObjectKind;     // Kind of object
   protected _symbol: string;       // Symbol to use on the map
+  protected _color: string;        // Color of symbol on the map
 
   constructor() {
     super();
     this._name = "Object";         // Default Obj name
     this._type = "Object";
     this._description = "";
+    this._data = "";
     this._symbol = "♪"
     this._kind = ObjectKind.Note;  // Default Obj type
     this._content = [];            // No subobjects
@@ -70,17 +73,47 @@ export class Obj extends Model {
   }
 
   /**
-   * Return the object's description
+   * Return the object's symbol
    */
   public get symbol(): string {
     return this._symbol;
   }
 
   /**
-   * Set the object's description
+   * Set the object's symbol
    */
   public set symbol(value: string) {
     this._symbol = value;
+    this.setDirty();
+  }
+
+  /**
+   * Return the object's symbol
+   */
+  public get data(): string {
+    return this._data;
+  }
+
+  /**
+   * Set the object's symbol
+   */
+  public set data(value: string) {
+    this._data = value;
+    this.setDirty();
+  }
+
+  /**
+   * Return the object's symbol
+   */
+  public get color(): string {
+    return this._color;
+  }
+
+  /**
+   * Set the object's symbol
+   */
+  public set color(value: string) {
+    this._color = value;
     this.setDirty();
   }
 

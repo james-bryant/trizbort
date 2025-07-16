@@ -4,6 +4,14 @@
   description: > 
     {{> DescriptionPartial content=object.description }}
   {{/if}}
+  symbol: {{object.symbol}}
+  {{#if object.data}}
+  data: >
+    {{> DescriptionPartial content=object.data }}
+  {{/if}}
+  {{#if object.color}}
+  color: {{object.color}}
+  {{/if}}
   {{#if object.content.length}}
   objects:
   {{#each object.content}}

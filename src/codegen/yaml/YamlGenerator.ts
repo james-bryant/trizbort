@@ -15,6 +15,8 @@ export class YamlGenerator extends CodeGenerator {
 
   protected kindToStr(dir: ObjectKind): string {
     switch(dir) {
+      case ObjectKind.Note:    return "note"
+      case ObjectKind.Key:     return "key"
       case ObjectKind.Actor:   return "actor";
       case ObjectKind.Item:    return "item";
       case ObjectKind.Scenery: return "decoration";

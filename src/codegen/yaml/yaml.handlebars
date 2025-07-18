@@ -2,7 +2,7 @@ game:
   name: {{{map.title}}}
   author: {{{map.author}}}
   {{#if map.description}}
-  description: > 
+  description: |-
     {{> DescriptionPartial content=map.description }}
   {{/if}}
 rooms: 
@@ -10,7 +10,7 @@ rooms:
   {{className this.name}}:
     name: {{this.name}}
     {{#if this.description}}
-    description: >
+    description: |-
       {{> DescriptionPartial content=this.description }}
     {{/if}}
     {{#if this.dark}}dark: true{{/if}}

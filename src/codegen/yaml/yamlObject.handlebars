@@ -1,12 +1,12 @@
 {{{className object.name}}}:
   kind: {{{kindToStr object.kind}}}
   {{#if object.description}}
-  description: > 
+  description: |-
     {{> DescriptionPartial content=object.description }}
   {{/if}}
   symbol: {{object.symbol}}
   {{#if object.data}}
-  data: >
+  data: |-
     {{> DescriptionPartial content=object.data }}
   {{/if}}
   {{#if object.color}}

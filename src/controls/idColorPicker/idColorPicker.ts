@@ -102,7 +102,27 @@ export class IdColorPicker extends Control {
   }
 
   get color(): string {
-    return this.currentColorElem.style.backgroundColor;
+    return this.rgbToHex(this.currentColorElem.style.backgroundColor);
+  }
+
+  // Convert RGB color to hexadecimal format
+  private rgbToHex(rgb: string): string {
+    // If already hex, return as is
+    if (rgb.startsWith('#')) {
+      return rgb;
+    }
+
+    // Extract RGB values from rgb(r, g, b) format
+    const result = rgb.match(/\d+/g);
+    if (!result || result.length < 3) {
+      return rgb; // Return original if parsing fails
+    }
+
+    const r = parseInt(result[0]);
+    const g = parseInt(result[1]);
+    const b = parseInt(result[2]);
+
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   }
 
   private addToRecent(color: string) {
@@ -128,7 +148,7 @@ export class IdColorPicker extends Control {
     }
   }
   
-  // Return the rgb color on the HSL canvas at the given mouse position
+  // Return the hex color on the HSL canvas at the given mouse position
   private getColorAtMouse(mouseX: number, mouseY: number, updateHSLpos: boolean) {
     let {x , y} = this.findObjCoordinates(this.canvasHSL);
     // Determine where the mouse is, in canvas coordinates:
@@ -140,7 +160,10 @@ export class IdColorPicker extends Control {
     }
     // Get the canvas image data, containing just one pixel at the point (x,y)
     let pixelData = this.ctxHSL.getImageData(x, y, 1, 1);
-    let color = `rgb(${pixelData.data[0]}, ${pixelData.data[1]}, ${pixelData.data[2]})`;
+    let r = pixelData.data[0];
+    let g = pixelData.data[1];
+    let b = pixelData.data[2];
+    let color = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     return color;
   }
 

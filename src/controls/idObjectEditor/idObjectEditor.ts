@@ -1,4 +1,4 @@
-import {Control, IdPopup, IdInput, IdTextarea, IdQuickColor} from "../";
+import {Control, IdPopup, IdInput, IdTextarea, IdColorPicker} from "../";
 import { ObjectKind } from "../../enums";
 import { Obj } from "../../models";
 
@@ -6,7 +6,8 @@ export class IdObjectEditor extends Control {
   private ctrlName: IdInput;
   private ctrlDescription: IdInput;
   private ctrlSymbol: IdInput;
-  private ctrlColor: IdQuickColor;
+  private ctrlColor: IdInput;
+  private colorPickerPopup: IdColorPicker; // Separate color picker for popup
   private ctrlData: IdTextarea;
   private obj: Obj;
   private btnDelete: HTMLElement;
@@ -78,7 +79,46 @@ export class IdObjectEditor extends Control {
     this.ctrlData = new IdTextarea('.js-data', this.elem).addEventListener('input', () => { this.obj.data = this.ctrlData.value; });
 
     // Color input:
-    this.ctrlColor = new IdQuickColor('.js-color', this.elem).addEventListener('change', () => { this.obj.color = this.ctrlColor.value; }) as IdQuickColor;
+    this.ctrlColor = new IdInput('.js-color', this.elem).addEventListener('change', () => { this.obj.color = this.ctrlColor.value; });
+
+    // Create color picker button manually if it doesn't exist in template
+    let colorPickerBtn = this.elem.querySelector('.js-color-picker-btn');
+    if (!colorPickerBtn) {
+      // Create the button and input group manually
+      const colorInput = this.elem.querySelector('.js-ctrl-color');
+      if (colorInput && colorInput.parentElement) {
+        // Wrap the input in a div with input-group class
+        const inputGroup = document.createElement('div');
+        inputGroup.className = 'input-group';
+
+        // Create the button
+        colorPickerBtn = document.createElement('button');
+        colorPickerBtn.className = 'btn btn-secondary js-color-picker-btn';
+        colorPickerBtn.textContent = '🎨';
+
+        // Style the input group
+        inputGroup.style.cssText = 'display: flex; align-items: stretch;';
+
+        // Style the input to connect with button
+        const inputElement = colorInput.querySelector('input');
+        if (inputElement) {
+          inputElement.style.cssText = 'border-radius: 4px 0 0 4px; border-right: none;';
+        }
+
+        // Insert the input group after the color input
+        colorInput.parentElement.insertBefore(inputGroup, colorInput.nextSibling);
+
+        // Move the color input into the group and add the button
+        inputGroup.appendChild(colorInput);
+        inputGroup.appendChild(colorPickerBtn);
+      }
+    }
+
+    // Color picker button handler
+    if (colorPickerBtn) {
+      colorPickerBtn.addEventListener('click', () => { this.openColorPickerPopup(); });
+    }
+
 
     // Delete button:
     this.btnDelete = this.elem.querySelector('a');
@@ -149,4 +189,93 @@ export class IdObjectEditor extends Control {
     let evt = new CustomEvent('delete');
     this.elem.dispatchEvent(evt);    
   }
+  // Open color picker popup for the ctrlColor field
+  openColorPickerPopup() {
+    // Create a popup container
+    const popupContainer = document.createElement('div');
+    popupContainer.style.position = 'fixed';
+    popupContainer.style.top = '25%';
+    popupContainer.style.left = '25%';
+    // popupContainer.style.transform = 'translate(-50%, -50%)';
+    popupContainer.style.background = '#fff';
+    popupContainer.style.border = '1px solid #ccc';
+    popupContainer.style.borderRadius = '8px';
+    popupContainer.style.padding = '20px';
+    popupContainer.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+    popupContainer.style.zIndex = '10000';
+    popupContainer.style.minWidth = '300px';
+
+    // Create backdrop
+    const backdrop = document.createElement('div');
+    backdrop.style.position = 'flex';
+    // backdrop.style.top = '0';
+    // backdrop.style.left = '0';
+    // backdrop.style.width = '100%';
+    // backdrop.style.height = '100%';
+    backdrop.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    backdrop.style.zIndex = '9999';
+
+    // Add title
+    const title = document.createElement('h3');
+    title.textContent = 'Select Color';
+    title.style.margin = '0 0 15px 0';
+    popupContainer.appendChild(title);
+
+    // Create color picker container
+    const colorPickerContainer = document.createElement('div');
+    colorPickerContainer.innerHTML = '<id-colorpicker class="popup-color-picker"></id-colorpicker>';
+    popupContainer.appendChild(colorPickerContainer);
+
+    // Create buttons container
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.style.display = 'flex';
+    buttonsContainer.style.justifyContent = 'flex-end';
+    buttonsContainer.style.gap = '10px';
+    buttonsContainer.style.marginTop = '20px';
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.className = 'btn btn-secondary';
+
+    const okBtn = document.createElement('button');
+    okBtn.textContent = 'OK';
+    okBtn.className = 'btn btn-primary';
+
+    buttonsContainer.appendChild(cancelBtn);
+    buttonsContainer.appendChild(okBtn);
+    popupContainer.appendChild(buttonsContainer);
+
+    // Add to document
+    document.body.appendChild(backdrop);
+    document.body.appendChild(popupContainer);
+
+    // Initialize color picker
+    this.colorPickerPopup = new IdColorPicker('.popup-color-picker', popupContainer);
+
+    // Set current value if any
+    if (this.ctrlColor.value) {
+      this.colorPickerPopup.color = this.ctrlColor.value;
+    }
+
+    // Close popup function
+    const closePopup = () => {
+      document.body.removeChild(backdrop);
+      document.body.removeChild(popupContainer);
+    };
+
+    // Event handlers
+    cancelBtn.addEventListener('click', closePopup);
+    backdrop.addEventListener('click', closePopup);
+
+    okBtn.addEventListener('click', () => {
+      // Get hex color and set it to the input field
+      const selectedColor = this.colorPickerPopup.color;
+      this.ctrlColor.value = selectedColor;
+      closePopup();
+    });
+
+    // Focus on OK button
+    okBtn.focus();
+  }
+
 }

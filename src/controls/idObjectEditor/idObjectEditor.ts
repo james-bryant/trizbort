@@ -13,6 +13,7 @@ export class IdObjectEditor extends Control {
   private btnDelete: HTMLElement;
   private btnNote: IdPopup;
   private btnKey: IdPopup;
+  private btnDoor: IdPopup;
   private btnActor: IdPopup;
   private btnItem: IdPopup;
   private btnScenery: IdPopup;
@@ -127,6 +128,7 @@ export class IdObjectEditor extends Control {
     // Object type buttons:
     this.btnNote = new IdPopup('.js-note', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Note); }) as IdPopup;
     this.btnKey = new IdPopup('.js-key', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Key); }) as IdPopup;
+    this.btnDoor = new IdPopup('.js-door', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Door); }) as IdPopup;
     this.btnItem = new IdPopup('.js-item', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Item); }) as IdPopup;
     this.btnScenery = new IdPopup('.js-scenery', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Scenery); }) as IdPopup;
     this.btnActor = new IdPopup('.js-actor', this.elem).addEventListener('click', () => { this.setKind(ObjectKind.Actor); }) as IdPopup;
@@ -165,6 +167,7 @@ export class IdObjectEditor extends Control {
   private setKind(kind: ObjectKind) {
     this.btnNote.selected = kind == ObjectKind.Note;
     this.btnKey.selected = kind == ObjectKind.Key;
+    this.btnDoor.selected = kind == ObjectKind.Door;
     this.btnActor.selected = kind == ObjectKind.Actor;
     this.btnItem.selected = kind == ObjectKind.Item;
     this.btnScenery.selected = kind == ObjectKind.Scenery;

@@ -11,5 +11,6 @@ export enum ObjectKind {
   SingularNamed,
   PluralNamed,
   Note,
-  Key
+  Key,
+  Door
 }
